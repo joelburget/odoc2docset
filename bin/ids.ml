@@ -18,7 +18,6 @@ and signature (x : Signature.t) =
     | Type (_, x) -> type_decl x
     | Exception x -> exception_ x
     | Value x -> value x
-    | External x -> external_ x
     | Class (_, x) -> class_ x
     | ClassType (_, x) -> class_type x
     | Include x -> include_ x
@@ -30,7 +29,7 @@ and signature (x : Signature.t) =
         Logs.warn (fun m -> m "Ignoring type substitution");
         []
     | TypExt x -> extension x
-    | Open _ | Comment _ -> [])
+    | Open _ | Comment _ | ModuleTypeSubstitution _ -> [])
 
 and include_ (x : Include.t) = signature x.expansion.content
 
@@ -67,10 +66,7 @@ and type_decl (x : TypeDecl.t) =
   any x.id :: ids
 
 and exception_ (x : Exception.t) = [ any x.id ]
-
 and value (x : Value.t) = [ any x.id ]
-
-and external_ (x : External.t) = [ any x.id ]
 
 and class_ (x : Class.t) =
   let ids = match x.expansion with Some cs -> class_signature cs | None -> [] in
